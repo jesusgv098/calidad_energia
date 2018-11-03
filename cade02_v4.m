@@ -24,7 +24,7 @@ pkg load io; %Para octave
 
 Archivo1='datos-senal.xlsx';
 
-senal = input('Senal a analizar 3 o 11? ');
+%senal = input('Senal a analizar 3 o 11? ');
 frec_fundamental = input('Frecuencia fundamental: ');
 I_l = input('IL para TDD: ');
 N_ciclos_tot = input('Ciclos a graficar : ');
@@ -40,17 +40,21 @@ t = 0:tm:N_ciclos_tot/frec_fundamental;
 i=1;
 S3_tot = 0;
 
-if senal == 3
-  hoja = 'Senal3';
-else
-  hoja = 'Senal11';
-end
+
+hoja1 = 'Senal3';
+hoja2 = 'Senal11';
+
 
   
-arms = xlsread(Archivo1,hoja,'B1:B180').';
-ampls = xlsread(Archivo1,hoja,'A1:A180').';
-angulos = xlsread(Archivo1,hoja,'C1:C180').';
-w_ieee519 = xlsread(Archivo1,hoja,'D1:D180').';
+arms = xlsread(Archivo1,hoja1,'B1:B180').';
+ampls = xlsread(Archivo1,hoja1,'A1:A180').';
+angulos = xlsread(Archivo1,hoja1,'C1:C180').';
+w_ieee519 = xlsread(Archivo1,hoja1,'D1:D180').';
+
+arms2 = xlsread(Archivo1,hoja2,'B1:B180').';
+ampls2 = xlsread(Archivo1,hoja2,'A1:A180').';
+angulos2 = xlsread(Archivo1,hoja2,'C1:C180').';
+w_ieee519_2 = xlsread(Archivo1,hoja2,'D1:D180').';
 
 in_senales = sprintf('Hasta cuantos de los %d armonicos quiere evaluar: ', length(arms)); 
 senales = input(in_senales);
@@ -69,6 +73,7 @@ end
 S3_tot_CD = comp_CD + S3_tot;
 
 vec_ampls = ampls / sqrt(2); %rms
+vec_ampls2 = ampls2 / sqrt(2); %rms
 ampl_rms_fundamental = ampls(1) / sqrt(2);  
 ampl_rms_total = vec_ampls / sqrt(2); % vector de RMS's de armonicos
 ampl_l_fundamental = ampls(1);
@@ -93,14 +98,21 @@ end
 k_ampls = 0;
 k_ampls_arm = 0;
 rms_total = 0;
+pot_real = 0;
+pot_reac = 0;
 j = 1;
 while (j <= amplitudes)
   ampl_rms = vec_ampls(j)^2;
+  ampl2_rms = vec_ampls2(j)^2;
+  p_real = vec_ampls(j) * vec_ampls2(j) * cos(angulos(j) - angulos2(j));
+  p_reac = vec_ampls(j) * vec_ampls2(j) * sin(angulos(j) - angulos2(j));
   ampl_k = vector_IHD(j)^2;
   ampl_k_arm = ampl_k * arms(j)^2;
   k_ampls = k_ampls + ampl_k;
   k_ampls_arm = k_ampls_arm + ampl_k_arm;
   rms_total = rms_total + ampl_rms;
+  pot_real = pot_real + p_real;
+  pot_reac = pot_reac + p_reac;
   j = j + 1;
 end
 
@@ -112,6 +124,11 @@ TDD = sqrt(rms_distorcion) / I_l
 TIF = sqrt(tif_arms) / ampl_rms_fundamental
 AMP_por_TIF = TIF * ampl_rms_fundamental
 Factor_K = k_ampls_arm / k_ampls
+pot_real
+pot_reac
+
+
+  
 
 %pot_real = 
 
