@@ -1,6 +1,26 @@
+% cade02_v4 genera grafico de la funcion resultante en el dominio del
+% tiempo conociendo los valores en el dominio de la frecuencia
+% ...(Ademas me sirvio para aprender Octave / Matlab)...
+%
+% Creado por Jesus Guajardo 0455051
+% MIOE
+% FIME - UANL
+%
+% Se requiere funcionalidad para leer informacion de archivos de excel
+% En octave se requiere paquete "I/O".
+% Instalar mediante:
+%
+%pkg install -forge io
+%
+% Para cargar (una vez instalado):
+%
+%pkg load io
+
 clc
 clear all
 close all
+
+pkg load io; %Para octave
 
 Archivo1='datos-senal.xlsx';
 
@@ -20,17 +40,17 @@ t = 0:tm:N_ciclos_tot/frec_fundamental;
 i=1;
 S3_tot = 0;
 
-if senal == 3;
+if senal == 3
   hoja = 'Senal3';
 else
   hoja = 'Senal11';
 end
 
   
-arms = xlsread(Archivo1,hoja,'B1:B180').'
-ampls = xlsread(Archivo1,hoja,'A1:A180').'
-angulos = xlsread(Archivo1,hoja,'C1:C180').'
-w_ieee519 = xlsread(Archivo1,hoja,'D1:D180').'
+arms = xlsread(Archivo1,hoja,'B1:B180').';
+ampls = xlsread(Archivo1,hoja,'A1:A180').';
+angulos = xlsread(Archivo1,hoja,'C1:C180').';
+w_ieee519 = xlsread(Archivo1,hoja,'D1:D180').';
 
 in_senales = sprintf('Hasta cuantos de los %d armonicos quiere evaluar: ', length(arms)); 
 senales = input(in_senales);
